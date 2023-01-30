@@ -41,7 +41,11 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'YourAI',
+    'uploader'
 ]
+
+#MEDIA_ROOT = os.path.join(BASE_DIR, 'statics')
+#MEDIA_URL = '/statics/'
 
 MIDDLEWARE = [
     'django.middleware.security.SecurityMiddleware',
@@ -60,9 +64,9 @@ AUTHENTICATION_BACKENDS = [
 ]
 
 # Auth
-LOGIN_URL = 'login'
+LOGIN_URL = '/login'
 LOGIN_REDIRECT_URL = '/home'
-LOGOUT_REDIRECT_URL = 'login'
+LOGOUT_REDIRECT_URL = '/login'
 #AUTH_USER_MODEL = "YourAI.YourAIUser"
 ##
 

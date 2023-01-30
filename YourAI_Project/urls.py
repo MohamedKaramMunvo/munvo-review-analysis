@@ -30,9 +30,19 @@ urlpatterns = [
     path(r'trial',views.trialPage),
     # free trial detect emotion
     path(r'detectEmotionTrial',views.detectEmotionTrial),
+    # data example page
+    path(r'dataexamplePage',views.dataexamplePage),
+    # upload file
+    path(r'upload',views.uploadFile),
 
     # register page
-    path(r'register',views.registerPage),
+    path(r'registerPage',views.registerPage),
+    # register
+    path(r'register',views.register),
+    # login page
+    path(r'loginPage',views.loginPage),
+
+
     # login page
     path(r'login',auth_views.LoginView.as_view(),name="login"),
     # logout

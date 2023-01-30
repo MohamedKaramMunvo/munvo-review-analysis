@@ -74,12 +74,12 @@
 
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user" id="exampleInputEmail"
-                                                    placeholder="Email Address" name="username" >
+                                                    placeholder="Email Address" name="username" required>
                                             </div>
 
                                             <div class="form-group">
                                                 <input type="password" class="form-control form-control-user" id="password"
-                                                    placeholder="Password" name="password" >
+                                                    placeholder="Password" name="password" required>
                                             </div>
 
 
@@ -93,6 +93,13 @@
                                             <input type="submit" class="btn btn-primary btn-user btn-block"
                                                    data-bs-target="#exampleModal"
                                                    value="Sign In"/>
+
+                                            <br>
+
+                                            <input type="button" class="btn btn-warning btn-user btn-block"
+                                                   data-bs-target="#exampleModal"
+                                                   value="Register"
+                                                   onclick="location.href='/registerPage';"/>
 
                                         </form>
 

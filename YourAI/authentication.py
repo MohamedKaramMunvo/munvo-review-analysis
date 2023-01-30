@@ -1,5 +1,6 @@
 #from django.contrib.auth.models import User
 from django.contrib.auth.models import User
+from pyDes import triple_des
 
 from .models import YourAIUser
 
@@ -19,7 +20,9 @@ class EmailAuthBackend:
             user = User.objects.get(email=username)
             userAI = YourAIUser.objects.get(email=username)
 
-            if userAI.password == password:
+            cipherpassword = triple_des('ABCDEFRTGHJSKLDS').encrypt(password, padmode=2)
+
+            if str(userAI.password) == str(cipherpassword):
                 return user
                 # check if the expiry date hasnt come yet
             return None

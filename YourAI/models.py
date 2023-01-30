@@ -13,14 +13,11 @@ class YourAIUser(models.Model):
     email = models.CharField(max_length=100,unique=True)
     password = models.CharField(max_length=100,null=True)
     phone = models.CharField(max_length=100,null=True)
-    registration_date = models.DateTimeField()
+    registration_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     last_request_date = models.DateTimeField(null=True)
-    expiry_date = models.DateTimeField(null=True)
+    expiry_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     pack = models.CharField(max_length=100,null=True)
     is_active = models.BooleanField(default=True)
-    last_login = models.DateTimeField(null=True)
-    is_authenticated = models.BooleanField(default=False)
-    is_staff = models.BooleanField(default=False)
 
     def __str__(self):
         return self.email
