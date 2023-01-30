@@ -1,4 +1,4 @@
 {
   "schemaVersion": 2,
-  "templateId": "python-django/4.1.5"
+  "templateId": "./DockerFile"
 }
