@@ -3,6 +3,7 @@ import os
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
 from django.core.files.storage import FileSystemStorage
+from django.http import HttpResponse
 from django.shortcuts import render
 from pyDes import triple_des
 from .EmotionAnalysis import predictEmotion
@@ -50,7 +51,31 @@ def uploadFile(request):
             # reading the csv file
             df = pd.read_csv(filename,delimiter=';')
             total_reviews = df.shape[0]
+
+            # total number of reviews
             context['total_reviews'] = total_reviews
+
+            # number of positive & negative reviews & avg pos score
+            count_positive = 0
+            count_negative = 0
+            avg_pos_score = 0
+
+            for line in df['Reviews']:
+                # get sentiment of review
+                sentiment = predictEmotion(line)
+                if 'Positive' in sentiment[0]:
+                    count_positive += 1
+                    avg_pos_score += int(sentiment[1])
+                elif 'Negative' in sentiment[0]:
+                    count_negative += 1
+
+            avg_pos_score = int(avg_pos_score / count_positive)
+
+            context['count_positive'] = count_positive
+            context['count_negative'] = count_negative
+            context['avg_pos_score'] = avg_pos_score
+
+
 
     except Exception as e:
        print(e)
@@ -59,11 +84,31 @@ def uploadFile(request):
 
     return render(request, 'index.html', context=context)
 
-# register page
+# trial page
 def trialPage(request):
     return render(request, 'trial.html',context={
         'oldtext':'At first i was worried about the shipment, but later it arrived and it was good'
     })
+
+# api description page
+def apiPage(request):
+    return render(request, 'apidescription.html')
+
+# api
+def api(request):
+    # if GET we render to home
+    if request.method == 'GET':
+        return home(request)
+    # if POST
+    elif request.method == 'POST':
+        # we check existence or email and password
+        if request.POST['email'] and request.POST['password'] and request.POST['text']:
+            pass
+        else:
+            return HttpResponse()
+    # else return 404
+    else :
+        pass
 
 # register
 def register(request):

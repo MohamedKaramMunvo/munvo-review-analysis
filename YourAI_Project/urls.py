@@ -34,6 +34,10 @@ urlpatterns = [
     path(r'dataexamplePage',views.dataexamplePage),
     # upload file
     path(r'upload',views.uploadFile),
+    # api description page
+    path(r'apiPage',views.apiPage),
+    # api url
+    path(r'api',views.api),
 
     # register page
     path(r'registerPage',views.registerPage),
