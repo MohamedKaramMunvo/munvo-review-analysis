@@ -23,4 +23,4 @@ COPY . /usr/src/app
 
 EXPOSE 80
 
-CMD ["/bin/bash", "./runserver.sh"]
+CMD ["python", "manage.py", "runserver", "0.0.0.0:80"]
