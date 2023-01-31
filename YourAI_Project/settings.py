@@ -28,7 +28,7 @@ SECRET_KEY = 'django-insecure-zimsg1(^jlc&+5h97wot$47)4rvgq2p$8vfc-y%(wqa%26t$m#
 # SECURITY WARNING: don't run with debug turned on in production!
 DEBUG = True
 
-ALLOWED_HOSTS = ['*.youraiplatform.com']
+ALLOWED_HOSTS = ['*']
 
 
 # Application definition
