@@ -27,10 +27,12 @@ def home(request):
     return render(request,'index.html',context=context)
 
 # data example page
+@login_required
 def dataexamplePage(request):
     return render(request, 'dataexample.html')
 
 # upload file
+@login_required
 def uploadFile(request):
     # get the connected user
     connected_user = request.user
@@ -117,6 +119,7 @@ def trialPage(request):
     })
 
 # api description page
+@login_required
 def apiPage(request):
     return render(request, 'apidescription.html')
 
