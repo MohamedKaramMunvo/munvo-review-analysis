@@ -97,7 +97,6 @@
 
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
-
                 </nav>
 
                     <!-- Sidebar Toggle (Topbar) -->
@@ -280,7 +279,7 @@
                         <div class="row">
 
                             <!-- Pie Chart -->
-                            <div class="col-xl-6 col-lg-5">
+                            <div class="col-xl-4 col-lg-5">
                                 <div class="card shadow mb-4">
                                     <!-- Card Header - Dropdown -->
                                     <div
@@ -305,8 +304,18 @@
                             </div>
 
                             <!-- Bar Chart -->
-                            <div class="col-xl-6 col-lg-5">
-
+                            <div class="col-xl-8 col-lg-5">
+                                <!-- Bar Chart -->
+                                <div class="card shadow mb-4">
+                                    <div class="card-header py-3">
+                                        <h6 class="m-0 font-weight-bold text-primary">Top 10 reviewed products</h6>
+                                    </div>
+                                    <div class="card-body">
+                                        <div class="chart-bar">
+                                            <canvas id="myBarChart"></canvas>
+                                        </div>
+                                    </div>
+                                </div>
                             </div>
 
 
@@ -418,6 +427,66 @@
     });
     </script>
     <!-- -->
+
+
+
+    <!-- Bar Chart -->
+    <script>
+    // Set new default font family and font color to mimic Bootstrap's default styling
+    Chart.defaults.global.defaultFontFamily = 'Nunito', '-apple-system,system-ui,BlinkMacSystemFont,"Segoe UI",Roboto,"Helvetica Neue",Arial,sans-serif';
+    Chart.defaults.global.defaultFontColor = '#858796';
+
+
+    // Bar Chart Example
+    var ctx = document.getElementById("myBarChart");
+    var myBarChart = new Chart(ctx, {
+      type: 'horizontalBar',
+      data: {
+        labels: {% if prod_list %}{{ prod_list|safe }}{% endif %}{% if not prod_list %}[]{% endif %},
+        datasets: [{
+          label: "Reviews",
+          backgroundColor: "#4e73df",
+          hoverBackgroundColor: "#2e59d9",
+          borderColor: "#4e73df",
+          data: {% if counts_list %}{{ counts_list }}{% endif %}{% if not counts_list %}[]{% endif %},
+        }],
+      },
+      options: {
+        maintainAspectRatio: false,
+        layout: {
+          padding: {
+            left: 10,
+            right: 25,
+            top: 25,
+            bottom: 0
+          }
+        },
+        legend: {
+          display: false
+        },
+        tooltips: {
+          titleMarginBottom: 10,
+          titleFontColor: '#6e707e',
+          titleFontSize: 14,
+          backgroundColor: "rgb(255,255,255)",
+          bodyFontColor: "#858796",
+          borderColor: '#dddfeb',
+          borderWidth: 1,
+          xPadding: 15,
+          yPadding: 15,
+          displayColors: false,
+          caretPadding: 10,
+          callbacks: {
+            label: function(tooltipItem, chart) {
+              var datasetLabel = chart.datasets[tooltipItem.datasetIndex].label || '';
+              return datasetLabel;
+            }
+          }
+        },
+      }
+    });
+    </script>
+    <!-- end bar chart -->
 
     <!-- Page level custom scripts -->
     <script src="../statics/js/demo/chart-area-demo.js"></script>

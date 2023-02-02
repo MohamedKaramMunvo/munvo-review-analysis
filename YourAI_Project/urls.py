@@ -13,11 +13,16 @@ Including another URLconf
     1. Import the include() function: from django.urls import include, path
     2. Add a URL to urlpatterns:  path('blog/', include('blog.urls'))
 """
+
 from django.contrib import admin
-from django.urls import path, include
+from django.urls import path
 from django.contrib.auth import views as auth_views
 
 from YourAI import views
+
+# errors handlers
+handler404 = 'YourAI.views.handler404'
+handler500 = 'YourAI.views.handler500'
 
 urlpatterns = [
     path('admin/', admin.site.urls),
@@ -52,4 +57,8 @@ urlpatterns = [
     # logout
     path(r'logout', auth_views.LogoutView.as_view(), name='logout'),
 
+
+
 ]
+
+

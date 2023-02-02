@@ -1,10 +1,181 @@
 <!DOCTYPE html>
 <html lang="en">
-<head>
-    <meta charset="UTF-8">
-    <title>Title</title>
-</head>
-<body>
 
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Your AI</title>
+    <link rel="icon" type="image/x-icon" href="../statics/favicon.ico">
+
+    <!-- Custom fonts for this template-->
+    <link href="../statics/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../statics/css/sb-admin-2.min.css" rel="stylesheet">
+
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                </nav>
+
+            <!-- Main Content -->
+            <div class="container-fluid">
+
+
+
+                <!-- Title -->
+                <h1 class="h3 mb-2 text-gray-800">Review sentiment analysis REST API</h1>
+                <p class="mb-4">
+                    YourAI REST API allows developers to easily integrate sentiment analysis capabilities into their existing platforms.
+                    With just a simple, fast and well-built API call, you can send a review text and receive its sentiment analysis.
+                    Whether you're building a customer feedback platform, conducting market research, or monitoring social media sentiment, this API can be the perfect
+                    solution for you.
+                </p>
+
+                <!-- Url paths -->
+                <div class="col-xl-12 col-md-6 mb-4">
+                        <div class="card border-left-primary shadow h-100 py-2">
+                            <div class="card-body">
+                                <div class="row no-gutters align-items-center">
+                                    <div class="col mr-2">
+                                        <div class="h5 mb-0 font-weight-bold text-gray-800">
+                                            <span class="badge bg-info text-white">POST</span> &nbsp;&nbsp; https://app.youraiplatform.com/api
+                                        </div>
+                                    </div>
+
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+
+                <!-- request example -->
+                <div class="row">
+                <div class="col-xl-12 col-lg-7">
+                        <div class="card shadow mb-4">
+                            <div
+                                class="card-header py-3 d-flex flex-row align-items-center justify-content-between">
+                                <h6 class="m-0 font-weight-bold text-primary">REST API request/response example</h6>
+                            </div>
+                            <div class="card-body">
+                                <h5><span class="badge bg-secondary text-white">Http Request Body</span></h5>
+                                <div class="p-3 bg-gray-300 text-black-50">
+                                <samp>
+                                    {<br>
+                                    &nbsp;&nbsp;"email" : "myemail@domain.com",<br>
+                                    &nbsp;&nbsp;"password" : "mypassword123",<br>
+                                    &nbsp;&nbsp;"text" : "i was very satisfied with this service"<br>
+                                    }
+                                </samp>
+                                </div>
+                                <br>
+                                <h5><span class="badge bg-success text-white">Http Response</span><br></h5>
+                                <p><strong>Media type : application/json</strong><br>
+                                <strong>Http code &nbsp;&nbsp;: 200 OK</strong></p>
+                                <div class="p-3 bg-gray-300 text-black-50">
+                                <samp>
+                                    {<br>
+                                        &nbsp;&nbsp;"sentiment": "Positive",<br>
+                                        &nbsp;&nbsp;"score": 98<br>
+                                    }
+                                </samp>
+                                </div>
+                            </div>
+                        </div>
+                </div>
+
+
+            </div>
+            <!-- End Page Content -->
+
+
+
+
+
+
+
+                <!-- End of Topbar -->
+
+
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+            <!-- Footer -->
+            {% include "footer.html" %}
+            <!-- End of Footer -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="registration/login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../statics/vendor/jquery/jquery.min.js"></script>
+    <script src="../statics/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../statics/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../statics/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../statics/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../statics/js/demo/chart-area-demo.js"></script>
+    <script src="../statics/js/demo/chart-pie-demo.js"></script>
+
+    </div>
 </body>
+
 </html>
