@@ -15,6 +15,7 @@ Django==4.1.5
 django-filter==22.1
 django-keycloak-auth==0.9.5
 djangorestframework==3.14.0
+duckdb==0.6.1
 ecdsa==0.18.0
 filelock==3.9.0
 flair==0.11.3
@@ -82,6 +83,7 @@ tzdata==2022.7
 uploader==0.5.1
 urllib3==1.26.14
 wcwidth==0.2.6
+whitenoise==6.3.0
 Wikipedia-API==0.5.8
 wrapt==1.14.1
 zipp==3.12.0
