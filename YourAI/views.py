@@ -1,7 +1,4 @@
 import json
-import os
-
-import duckdb
 import numpy as np
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.models import User
