@@ -64,9 +64,14 @@ def uploadFile(request):
             count_negative = 0
             avg_pos_score = 0
 
-            for line in df['Reviews']:
+            prods = {}
+            for line,line2 in zip(df['Reviews'],df['Products']):
                 # get sentiment of review if not null
-                if line != '######':
+                if line != '######' and line2 != '######':
+                    if line2 not in prods:
+                        prods[line] = 1
+                    else:
+                        prods[line] += 1
                     sentiment = predictEmotion(line)
                     if 'Positive' in sentiment[0]:
                         count_positive += 1
@@ -77,15 +82,6 @@ def uploadFile(request):
 
             # avg of positive reviews
             avg_pos_score = int(avg_pos_score / count_positive)
-
-            # get count of reviews per product
-            prods = {}
-            for line,line2 in zip(df['Products'],df['Reviews']):
-                if line != '######' and line2 != '######':
-                    if line not in prods:
-                        prods[line] = 1
-                    else:
-                        prods[line] += 1
 
             prods = dict(take(10,sorted(prods.items(), key=lambda x: x[1],reverse=True)))
             prod_list = []

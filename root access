@@ -31,3 +31,7 @@ Mot de passe MySQL : 7)S@3Bap13
 ------ Gmail ------
 email : youraiplatform@gmail.com
 password : 8o)S@3Bap13
+
+
+---- add following on nginx configuration (for loading time limit) -----
+proxy_read_timeout 1200s;
