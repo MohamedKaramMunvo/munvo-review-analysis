@@ -69,9 +69,9 @@ def uploadFile(request):
                 # get sentiment of review if not null
                 if line != '######' and line2 != '######':
                     if line2 not in prods:
-                        prods[line] = 1
+                        prods[line2] = 1
                     else:
-                        prods[line] += 1
+                        prods[line2] += 1
                     sentiment = predictEmotion(line)
                     if 'Positive' in sentiment[0]:
                         count_positive += 1
