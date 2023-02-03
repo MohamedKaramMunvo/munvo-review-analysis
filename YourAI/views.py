@@ -292,6 +292,12 @@ def detectEmotionTrial(request):
     else :
         return render(request, 'error/404.html')
 
+
+# http codes description
+@login_required
+def httpDescription(request):
+    return render(request, 'httpDescription.html')
+
 # register page
 def registerPage(request):
     return render(request, 'registration/register.html')

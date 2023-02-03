@@ -50,6 +50,8 @@ urlpatterns = [
     path(r'register',views.register),
     # login page
     path(r'loginPage',views.loginPage),
+    # http codes description
+    path(r'httpcodesPage',views.httpDescription),
 
 
     # login page
