@@ -11,6 +11,7 @@ from pyDes import triple_des
 from .EmotionAnalysis import predictEmotion
 import pandas as pd
 from .models import YourAIUser
+from .SMTP import *
 
 
 # home dashboard
@@ -185,7 +186,6 @@ def register(request):
             password = request.POST['password']
             password2 = request.POST['password2']
             phone = request.POST['phone']
-            pack = request.POST['pack']
 
             # check if email already exist
             u = YourAIUser.objects.filter(email=email).exists()
@@ -218,7 +218,6 @@ def register(request):
                     email=email,
                     password=cipherpassword, # encrypted password is saved
                     phone=phone, # expiry date default is now
-                    pack=pack
                 )
                 user = User.objects.create_user(email, email, password)
 
@@ -229,6 +228,13 @@ def register(request):
                 user.save()
 
             # send confirmation email
+            subject = "Welcome to YourAI Platform!"
+            body = "Dear "+aiuser.first_name+", we are excited to welcome you to YourAI\n" \
+                                             "To get started, please activate your email on the following link : https://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n" \
+                                             "If you have any questions or issues, please let us know at team@youraiplatform.com\n\n\n"+\
+                                             "Best regards\nYourAI Team"
+
+            sendEmail(aiuser.email,subject,body)
 
             return render(request, 'registration/register.html', context={
                 'sent': True,
@@ -243,6 +249,38 @@ def register(request):
             })
     else :
         return render(request, 'error/404.html')
+
+
+# activate user with his id and return login page with message
+def activate(request):
+    if request.method == 'GET':
+        # get user id
+        if request.GET.get('user') :
+            id = int(request.GET.get('user'))
+
+            # if id doesnt exist then we raise an error
+            if not YourAIUser.objects.filter(id=id).exists():
+                return render(request, 'registration/login.html', context={
+                    'successActivate': False,
+                    'messageActivate': 'User not found'
+                })
+
+            aiuser = YourAIUser.objects.filter(id=id).update(is_active=True)
+
+            return render(request, 'registration/login.html', context={
+                'successActivate': True,
+                'messageActivate': 'Your account has been activated!'
+            })
+
+        # if user not filled then we raise an error
+        else :
+            return render(request,'registration/login.html',context={
+                'successActivate':False,
+                'messageActivate':'User not filled'
+            })
+    else:
+        return render(request, 'error/404.html')
+
 
 # detect emotion from text
 def detectEmotionTrial(request):

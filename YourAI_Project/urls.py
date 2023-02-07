@@ -43,6 +43,8 @@ urlpatterns = [
     path(r'apiPage',views.apiPage),
     # api url
     path(r'api',views.api),
+    # activation url
+    path(r'activate',views.activate),
 
     # register page
     path(r'registerPage',views.registerPage),

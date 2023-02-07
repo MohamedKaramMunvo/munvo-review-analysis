@@ -71,6 +71,17 @@
 
                                             {% csrf_token %}
 
+                                            {% if successActivate == True %}
+                                                <div class="alert alert-success" role="alert">
+                                                    {{ messageActivate }}
+                                                </div>
+                                            {% endif %}
+                                            {% if successActivate == False %}
+                                                <div class="alert alert-warning" role="alert">
+                                                    {{ messageActivate }}
+                                                </div>
+                                            {% endif %}
+
 
                                             <div class="form-group">
                                                 <input type="text" class="form-control form-control-user" id="exampleInputEmail"
