@@ -20,11 +20,13 @@ class EmailAuthBackend:
             user = User.objects.get(email=username)
             userAI = YourAIUser.objects.get(email=username)
 
+            # i encrypt the entered password and compare it with existing encrypted password
             cipherpassword = triple_des('ABCDEFRTGHJSKLDS').encrypt(password, padmode=2)
 
             if str(userAI.password) == str(cipherpassword):
-                return user
-                # check if the expiry date hasnt come yet
+                # check if the account is active
+                if userAI.is_active:
+                    return user
             return None
         except:
             return None

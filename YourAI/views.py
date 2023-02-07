@@ -222,18 +222,17 @@ def register(request):
                 )
                 user = User.objects.create_user(email, email, password)
 
+                # user is inactive by default
+                aiuser.is_active = False
+
                 aiuser.save()
                 user.save()
-
-            # if pack is not free --> go to paiement page + expiry date set + pack set
-
-            # else
 
             # send confirmation email
 
             return render(request, 'registration/register.html', context={
                 'sent': True,
-                'message': 'Your account has been created successfully, please check your email'
+                'message': 'Your account has been created successfully, please check your email for activation'
             })
 
         except Exception as e:
