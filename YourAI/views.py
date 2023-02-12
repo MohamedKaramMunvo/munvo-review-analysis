@@ -1,3 +1,4 @@
+import ast
 import json
 import numpy as np
 from django.contrib.auth.decorators import login_required
@@ -58,6 +59,14 @@ def uploadFile(request):
             # reading the csv file
             df = pd.read_csv(filename,delimiter=';')
 
+            # checking if file rows < 100 , if FREE PACK and < 100 --> error message
+            # FREE pack : < 100
+            size = df.shape[0]
+            if userAI.pack == 'FREE' and size > 100 and df.columns.isin(['Products', 'Reviews']).any():
+                context['error'] = True
+                context['errorMessage'] = 'You cannot upload a file of more than 100 rows with Free pack, please update to Pro'
+                return render(request, 'index.html', context=context)
+
             # replace empty or nan values with ######
             df = df.replace(' ', '######')
             df = df.replace(np.nan, '######')
@@ -109,6 +118,7 @@ def uploadFile(request):
     except Exception as e:
        print(e)
        context['error'] = True
+       context['errorMessage'] = 'Error during upload, please review the file format and correctness'
 
 
     return render(request, 'index.html', context=context)
@@ -217,7 +227,8 @@ def register(request):
                     last_name=lastname,
                     email=email,
                     password=cipherpassword, # encrypted password is saved
-                    phone=phone, # expiry date default is now
+                    phone=phone, # expiry date default is now,
+                    pack='FREE',
                 )
                 user = User.objects.create_user(email, email, password)
 
@@ -238,7 +249,7 @@ def register(request):
 
             return render(request, 'registration/register.html', context={
                 'sent': True,
-                'message': 'Your account has been created successfully, please check your email for activation'
+                'message': 'Your account has been created successfully, please check your email for activation (check spam also)'
             })
 
         except Exception as e:
@@ -342,6 +353,60 @@ def registerPage(request):
 # login page
 def loginPage(request):
     return render(request, 'registration/login.html')
+
+# forgot password page
+def forgotPasswordPage(request):
+    return render(request, 'registration/forgotpassword.html')
+
+def forgotPassword(request):
+    if request.method == 'POST':
+        # get user id
+        if request.POST['email'] :
+            # if id doesnt exist then we raise an error
+            if not YourAIUser.objects.filter(email=str(request.POST['email'])).exists():
+                return render(request, 'registration/forgotpassword.html', context={
+                    'successActivate': False,
+                    'messageActivate': 'User not found'
+                })
+
+            # retrieve decrypted password
+            aiuser = YourAIUser.objects.get(email=str(request.POST['email']))
+            password = aiuser.password
+            decrypted_password = triple_des('ABCDEFRTGHJSKLDS').decrypt(ast.literal_eval(password), padmode=2)
+            decrypted_password = str(decrypted_password, "utf-8")
+
+            # retrieve activation link
+            activation_link = "https://app.youraiplatform.com/activate?user="+str(aiuser.id)
+
+            # resend email with password
+            message = "Hey dear "+str(aiuser.first_name)+"\nPlease find your password (make sure to save it somewhere safe) : "+decrypted_password+"\n" \
+                                                            "And the link to activate your account (if not) : "+activation_link+"\n\n\n"\
+                                                            "Best regards\nYourAI Team"
+
+            try:
+                sendEmail(aiuser.email,"Resend password and activation link",message)
+            except:
+                return render(request, 'registration/forgotpassword.html', context={
+                    'successActivate': False,
+                    'messageActivate': 'Oops! internal error'
+                })
+
+
+            return render(request, 'registration/forgotpassword.html', context={
+                'successActivate': True,
+                'messageActivate': 'Your password and activation link were sent to your email, please also check spam'
+            })
+
+
+        # if user not filled then we raise an error
+        else :
+            return render(request,'registration/forgotpassword.html',context={
+                'successActivate':False,
+                'messageActivate':'User not filled'
+            })
+    else:
+        return render(request, 'error/404.html')
+    return render(request, 'registration/forgotpassword.html')
 
 # error handler
 @csrf_exempt

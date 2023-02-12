@@ -52,6 +52,11 @@ urlpatterns = [
     path(r'register',views.register),
     # login page
     path(r'loginPage',views.loginPage),
+    # forgot password page
+    path(r'forgotPasswordPage',views.forgotPasswordPage),
+    # forgot password
+    path(r'forgotPassword',views.forgotPassword),
+
     # http codes description
     path(r'httpcodesPage',views.httpDescription),
 

@@ -16,7 +16,7 @@ class YourAIUser(models.Model):
     registration_date = models.DateTimeField(auto_now_add=True, null=True, blank=True)
     last_request_date = models.DateTimeField(null=True)
     expiry_date = models.DateTimeField(auto_now_add=True, null=True, blank=True) # the date when the pack will expire
-    pack = models.CharField(max_length=100,null=True) # the pack choose FREE,BASIC,STANDARD,PREMIUM
+    pack = models.CharField(max_length=100,null=True) # the pack choose FREE,PRO (later : BASIC,STANDARD,PREMIUM)
     api_count = models.IntegerField(default=20) # the api tries allowed for a free account
     is_active = models.BooleanField(default=True) # when someone register, his account is inactive until he activate it via link
 

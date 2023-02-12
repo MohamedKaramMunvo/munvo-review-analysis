@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zimsg1(^jlc&+5h97wot$47)4rvgq2p$8vfc-y%(wqa%26t$m#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -46,7 +46,7 @@ INSTALLED_APPS = [
     'django.contrib.messages',
     'django.contrib.staticfiles',
     'YourAI',
-    'uploader'
+    'uploader', # to upload data csv files
 ]
 
 #MEDIA_ROOT = os.path.join(BASE_DIR, 'statics')
