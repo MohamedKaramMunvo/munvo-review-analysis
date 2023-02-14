@@ -2,6 +2,10 @@
 username : mkaram
 admin password : Pa$$myapp123
 
+------ OpenAI ------
+api key : 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
+// think about increasing API usage limit, depending on customers usage
+
 ------ Digital Ocean ------
 digital ocean (droplet pass) : Pa$$myapp12@1Qs
 

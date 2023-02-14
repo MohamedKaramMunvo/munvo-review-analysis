@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from more_itertools import take
 from pyDes import triple_des
-from .EmotionAnalysis import predictEmotion
+from .EmotionAnalysis import predictEmotion, extractKeywords
 import pandas as pd
 from .models import YourAIUser
 from .SMTP import *
@@ -59,31 +59,38 @@ def uploadFile(request):
             # reading the csv file
             df = pd.read_csv(filename,delimiter=';')
 
+            # checking if file is in correct format
+            if not df.columns.isin(['Reviews']).any():
+                context['error'] = True
+                context['errorMessage'] = 'Please make sure to have the Reviews column on your file, and to upload a correct CSV file'
+                return render(request, 'index.html', context=context)
+
             # checking if file rows < 100 , if FREE PACK and < 100 --> error message
             # FREE pack : < 100
+            '''
             size = df.shape[0]
-            if userAI.pack == 'FREE' and size > 100 and df.columns.isin(['Products', 'Reviews']).any():
+            if userAI.pack == 'FREE' and size > 100 and df.columns.isin(['Reviews']).any():
                 context['error'] = True
                 context['errorMessage'] = 'You cannot upload a file of more than 100 rows with Free pack, please update to Pro'
                 return render(request, 'index.html', context=context)
+'''
 
             # replace empty or nan values with ######
             df = df.replace(' ', '######')
             df = df.replace(np.nan, '######')
 
-            # number of positive & negative reviews & avg pos score
+            # get number of positive & negative reviews & avg pos score
             count_positive = 0
             count_negative = 0
             avg_pos_score = 0
 
-            prods = {}
-            for line,line2 in zip(df['Reviews'],df['Products']):
+            total_text = ''
+
+            for line in zip(df['Reviews']) :
                 # get sentiment of review if not null
-                if line != '######' and line2 != '######':
-                    if line2 not in prods:
-                        prods[line2] = 1
-                    else:
-                        prods[line2] += 1
+                if line != '######' :
+                    # gathering all the text for keywords analysis
+                    total_text += str(line)
                     sentiment = predictEmotion(line)
                     if 'Positive' in sentiment[0]:
                         count_positive += 1
@@ -92,24 +99,30 @@ def uploadFile(request):
                         count_negative += 1
 
 
-            # avg of positive reviews
+            # keywords analysis of full text (-1 if none)
+            keywords = -1
+            keywords_counts = []
+            try :
+                keywords = []
+                keywords,keywords_counts = extractKeywords(total_text)
+            except Exception as e:
+                print(e)
+
             avg_pos_score = int(avg_pos_score / count_positive)
 
-            prods = dict(take(10,sorted(prods.items(), key=lambda x: x[1],reverse=True)))
-            prod_list = []
-            counts_list = []
-            for p in prods:
-                prod_list.append(p)
-                counts_list.append(prods[p])
-
+            # counts of positive,negative reviews
             context['count_positive'] = count_positive
             context['count_negative'] = count_negative
+
+            # avg score of positivity
             context['avg_pos_score'] = avg_pos_score
-            context['prod_list'] = prod_list
-            context['counts_list'] = counts_list
 
             # total number of reviews
             context['total_reviews'] = count_positive + count_negative
+
+            # 10 keywords
+            context['keywords'] = keywords
+            context['keywords_counts'] = keywords_counts
 
             # delete file after finish
             fs.delete(str(userAI.email) + '/data.csv')
@@ -118,7 +131,7 @@ def uploadFile(request):
     except Exception as e:
        print(e)
        context['error'] = True
-       context['errorMessage'] = 'Error during upload, please review the file format and correctness'
+       context['errorMessage'] = 'Error during upload, please review the file format, make sure to have a CSV file, and to have the column Reviews'
 
 
     return render(request, 'index.html', context=context)
@@ -345,6 +358,10 @@ def detectEmotionTrial(request):
 @login_required
 def httpDescription(request):
     return render(request, 'httpDescription.html')
+
+@login_required
+def pricingPage(request):
+    return render(request,'pricing.html')
 
 # register page
 def registerPage(request):

@@ -121,9 +121,8 @@
                                         <h6 class="m-0 font-weight-bold text-primary">How to upload data?</h6>
                                     </div>
                                     <div class="card-body">
-                                        <p class="mb-4">Please make sure to upload a csv file, with 2 columns (<strong>Products</strong>,<strong>Reviews</strong>)</p>
-                                        <p class="mb-4">Where <strong>Products stands for the product or service that received the review</strong>,
-                                            and <strong>Reviews stands for the review/comment to analyze</strong>, you can check an example <a href="/dataexamplePage">here</a></p>
+                                        <p class="mb-4">Please make sure to upload a csv file, with the column (<strong>Reviews</strong>)
+                                        which stands for the review/comment to analyze</strong>, you can check an example <a href="/dataexamplePage">here</a></p>
 
 
                                         <form method="POST" action="/upload" enctype="multipart/form-data">
@@ -317,7 +316,7 @@
                                 <!-- Bar Chart -->
                                 <div class="card shadow mb-4">
                                     <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">Top 10 reviewed products</h6>
+                                        <h6 class="m-0 font-weight-bold text-primary">Top 10 most important keywords (score/10000)</h6>
                                     </div>
                                     <div class="card-body">
                                         <div class="chart-bar">
@@ -402,13 +401,13 @@
                   Math.round({{ count_positive }}/{{ total_reviews }}*100)
               {% endif %}
               {% if not count_positive %}
-                  0
+                  50
               {% endif %},
               {% if count_negative %}
                   Math.round({{ count_negative }}/{{ total_reviews }}*100)
               {% endif %}
               {% if not count_negative %}
-                  0
+                  50
               {% endif %}
                 ],
           backgroundColor: ['#1cc88a', '#CA0B00'],
@@ -451,13 +450,13 @@
     var myBarChart = new Chart(ctx, {
       type: 'horizontalBar',
       data: {
-        labels: {% if prod_list %}{{ prod_list|safe }}{% endif %}{% if not prod_list %}[]{% endif %},
+        labels: {% if keywords != -1 %}{{ keywords|safe }}{% endif %}{% if keywords == -1 or not keywords %}["sample","sample","sample","sample","sample","sample","sample","sample","sample","sample"]{% endif %},
         datasets: [{
           label: "Reviews",
           backgroundColor: "#4e73df",
           hoverBackgroundColor: "#2e59d9",
           borderColor: "#4e73df",
-          data: {% if counts_list %}{{ counts_list }}{% endif %}{% if not counts_list %}[]{% endif %},
+          data: {% if keywords != -1 %}{{ keywords_counts }}{% endif %}{% if keywords == -1 or not keywords %}[10,9,8,7,6,5,4,3,2,1]{% endif %},
         }],
       },
       options: {

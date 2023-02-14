@@ -37,6 +37,8 @@ urlpatterns = [
     path(r'detectEmotionTrial',views.detectEmotionTrial),
     # data example page
     path(r'dataexamplePage',views.dataexamplePage),
+    # pricing page
+    path(r'pricingPage',views.pricingPage),
     # upload file
     path(r'upload',views.uploadFile),
     # api description page
