@@ -61,14 +61,14 @@
                         <h1 class="h3 mb-2 text-gray-800">Pricing plan</h1>
                         <p class="mb-4">We offer a simple, flexible and cheap pricing plan that is based on the complexity of each feature.<br>
                             Please note that the use of the dashboard remains <strong style="color:green">free</strong> unless you want to use a file that has more than 100 reviews
-                        <br>
-                            1 Coin = 0.03 $
+
+
                         </p>
 
-                        <!-- DataTales Example -->
+                        <!-- Pricing Table -->
                         <div class="card shadow mb-4">
                             <div class="card-header py-3">
-                                <h6 class="m-0 font-weight-bold text-primary">Price Table</h6>
+                                <h6 class="m-0 font-weight-bold text-primary">Price Table <strong>[ 1 Coin = 0.03$ ]</strong></h6>
                             </div>
                             <div class="card-body">
                                 <div class="table-responsive">
@@ -76,32 +76,101 @@
                                         <thead>
                                             <tr>
                                                 <th>Feature</th>
-                                                <th>Price</th>
+                                                <th>Price (Coins)</th>
+                                                <th>Price (Dollar)</th>
                                             </tr>
                                         </thead>
                                         <tbody>
                                             <tr>
                                                 <td>Dashboard (less than 100 reviews)</td>
-                                                <td><strong style="color:green">Free for unlimited use </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                <td><strong style="color:green">Free </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
+                                                <td><strong style="color:green">Free </strong>&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;&nbsp;</td>
 
                                             </tr>
                                             <tr>
                                                 <td>Dashboard (more than 100 reviews)</td>
-                                                <td>0.5 coin per analysis ( 0.015 $ )</td>
+                                                <td>0.5 coin per analysis</td>
+                                                <td>0.015 $ per analysis</td>
                                             </tr>
                                             <tr>
                                                 <td>Sentiment analysis REST API</td>
-                                                <td>0.5 coin per request ( 0.015 $ )</td>
+                                                <td>0.5 coin per request</td>
+                                                <td>0.015 $ per request</td>
                                             </tr>
                                             <tr>
                                                 <td>Text summarization REST API</td>
-                                                <td>1 coin per request ( 0.03 $ )</td>
+                                                <td>1 coin per request</td>
+                                                <td>0.03 $ per request</td>
                                             </tr>
 
 
                                         </tbody>
                                     </table>
                                 </div>
+                            </div>
+                        </div>
+
+                        <!-- Buy credits -->
+                        <div class="row">
+                            <div class="col-sm-4">
+                                <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Available coins </h6>
+                            </div>
+                            <div class="card-body">
+                                <br>
+                                <h2 style="color: #365dcd"><center>{{ avail_coins }} Coins</center></h2>
+                                <br><br>
+                            </div>
+                        </div>
+                            </div>
+                            <div class="col-sm-8">
+                                <div class="card shadow mb-4">
+                            <div class="card-header py-3">
+                                <h6 class="m-0 font-weight-bold text-primary">Buy more coins </h6>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-4">Please choose any number of coins that you want (Min: 5$) (Max: 100$)</p>
+
+
+                                        <form method="POST" action="/buycoins" enctype="multipart/form-data">
+                                            {% csrf_token %}
+
+                                            <div class="row">
+                                                <div class="col-xl-3 col-md-6 mb-4">
+                                                    <div class="input-group mb-2">
+                                                      <div class="input-group-prepend">
+                                                        <span class="input-group-text">$</span>
+                                                      </div>
+                                                      <input type="number" class="form-control" min="5" max="100" name="price" onchange="validateNum(this);" placeholder="Amount">
+                                                    </div>
+                                                </div>
+                                                <div class="col-xl-3 col-md-6 mb-4">
+                                                    <input type="text" class="form-control form-control" id="result" value="You will get 0 coins" disabled>
+                                                </div>
+                                                <script>
+                                                  function validateNum(input) {
+                                                    if (input.value < 5) input.value = 5;
+                                                    if (input.value > 100) input.value = 100;
+                                                    var price = input.value;
+                                                    var result = document.getElementById("result");
+                                                    result.value = "You get "+Math.round(price/0.03)+" coins";
+                                                  }
+                                                </script>
+                                                <div class="col-xl-3 col-md-6 mb-4">
+                                                <div class="input-group-append">
+                                                    <button type="submit" class="btn btn-primary" >Buy now</button>
+                                                </div>
+                                                </div>
+                                            </div>
+                                            {% if error %}
+                                                    <div class="alert alert-warning" role="alert">
+                                                        {{ errorMessage }}
+                                                    </div>
+                                            {% endif %}
+                                        </form>
+                            </div>
+                        </div>
                             </div>
                         </div>
 

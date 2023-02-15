@@ -14,6 +14,9 @@ import pandas as pd
 from .models import YourAIUser
 from .SMTP import *
 
+# constant varialble for coin price ($)
+COIN_PRICE = 0.03
+
 
 # home dashboard
 @login_required
@@ -65,15 +68,13 @@ def uploadFile(request):
                 context['errorMessage'] = 'Please make sure to have the Reviews column on your file, and to upload a correct CSV file'
                 return render(request, 'index.html', context=context)
 
-            # checking if file rows < 100 , if FREE PACK and < 100 --> error message
-            # FREE pack : < 100
-            '''
+            # checking if file rows < 100 , if 0 token and < 100 --> error message
             size = df.shape[0]
-            if userAI.pack == 'FREE' and size > 100 and df.columns.isin(['Reviews']).any():
+            if userAI.coins - 0.5 < 0 and size > 100 and df.columns.isin(['Reviews']).any():
                 context['error'] = True
-                context['errorMessage'] = 'You cannot upload a file of more than 100 rows with Free pack, please update to Pro'
+                context['errorMessage'] = 'You cannot upload a file of more than 100 rows while you have no enough coins, please purchase more coins'
                 return render(request, 'index.html', context=context)
-'''
+
 
             # replace empty or nan values with ######
             df = df.replace(' ', '######')
@@ -127,6 +128,10 @@ def uploadFile(request):
             # delete file after finish
             fs.delete(str(userAI.email) + '/data.csv')
 
+            # consuming 0.5 coins after making sure everything is good
+            if size > 100:
+                YourAIUser.objects.filter(id=userAI.id).update(coins=userAI.coins-0.5)
+
 
     except Exception as e:
        print(e)
@@ -147,9 +152,67 @@ def trialPage(request):
 def apiPage(request):
     return render(request, 'apidescription.html')
 
-# api
+# api sentiment analysis
 @csrf_exempt
 def api(request):
+    # if POST
+    if request.method == 'POST':
+        try:
+            body_unicode = request.body.decode('utf-8')
+            body = json.loads(body_unicode)
+            # we check existence or email and password
+            if not body['email'] or not body['password'] or str(
+                    body['email']).strip() == '' or str(body['password']).strip() == '':
+                return HttpResponse(status="510",
+                                    content="Email or password not provided with body parameters")  # 510 : email or password not filled
+
+            elif not body['text'] or str(body['text']).strip() == '':
+                return HttpResponse(status="515",
+                                    content="Review text not provided with body parameters")  # 515 : text not filled
+
+            else:
+                email = body['email']
+                password = body['password']
+                text = body['text']
+                u = YourAIUser.objects.filter(email=email)
+
+                if not u.exists():
+                    return HttpResponse(status="250",
+                                        content="This user doesnt exist") # 250 user doesnt exist
+
+                # encrypt user password and compare it
+                user = YourAIUser.objects.get(email=email)
+                if str(triple_des('ABCDEFRTGHJSKLDS').encrypt(password, padmode=2)) != str(user.password) :
+                    return HttpResponse(status="255",
+                                        content="Incorrect user password")  # 255 incorrect password
+
+                # return error if no enough credits
+                if user.coins - 0.5 < 0:
+                    return HttpResponse(status="270",
+                                        content="Not enough credits for the request")  # 270 user doesnt exist
+
+                emotion = predictEmotion(text)
+
+                # consuming 0.5 coins after making sure everything is good
+                YourAIUser.objects.filter(id=user.id).update(coins=user.coins - 0.5)
+
+                return JsonResponse({
+                    "sentiment":emotion[0],
+                    "score":emotion[1]
+                }) # 200 : good
+
+        except Exception as e:
+            print('Error : ',e)
+            return HttpResponse(status="500", content="Internal Error, please make sure to have correct review text and credentials") # 500 : internal error
+
+    # else another method was user
+    else :
+        return HttpResponse(status="414",content="POST method not used") # 414 : POST not used
+
+
+# api sentiment analysis + summarize
+@csrf_exempt
+def apiv2(request):
     # if POST
     if request.method == 'POST':
         try:
@@ -197,6 +260,7 @@ def api(request):
     # else another method was user
     else :
         return HttpResponse(status="414",content="POST method not used") # 414 : POST not used
+
 
 # register
 def register(request):
@@ -255,6 +319,7 @@ def register(request):
             subject = "Welcome to YourAI Platform!"
             body = "Dear "+aiuser.first_name+", we are excited to welcome you to YourAI\n" \
                                              "To get started, please activate your email on the following link : https://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n" \
+                                             "As a welcome gift, we offer you 20 free credits to use!\n"+\
                                              "If you have any questions or issues, please let us know at team@youraiplatform.com\n\n\n"+\
                                              "Best regards\nYourAI Team"
 
@@ -361,7 +426,43 @@ def httpDescription(request):
 
 @login_required
 def pricingPage(request):
-    return render(request,'pricing.html')
+    connected_user = request.user
+
+    # get use available coins
+    user = YourAIUser.objects.get(email=connected_user.email)
+
+    return render(request,'pricing.html',context={
+        "avail_coins":user.coins
+    })
+
+@login_required
+def buycoins(request):
+
+    if request.method == 'POST':
+
+        price = request.POST['price']
+
+        # if coins is null
+        if not price :
+            print("Price is null")
+            return pricingPage(request)
+
+        # if coins is not numbers
+        elif not price.isnumeric():
+            print("Price is not numeric")
+            return pricingPage(request)
+
+        # if coins are higher than 100 or less than 5
+        elif float(price) > 100 or float(price) < 5:
+            print("Price is not between 5 and 100")
+            return pricingPage(request)
+
+        # go to checkout page
+        coins = int(float(price)/COIN_PRICE)+1
+        print("Price : ",price," COINS : ",coins)
+
+    else :
+        return render(request, 'error/404.html')
 
 # register page
 def registerPage(request):

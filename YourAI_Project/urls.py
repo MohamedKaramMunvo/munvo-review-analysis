@@ -45,6 +45,8 @@ urlpatterns = [
     path(r'apiPage',views.apiPage),
     # api url
     path(r'api',views.api),
+    # buy coins url
+    path(r'buycoins',views.buycoins),
     # activation url
     path(r'activate',views.activate),
 
