@@ -1,4 +1,5 @@
 ------ App Django ------
+// pay attention to deployment (overwrite database)
 username : mkaram
 admin password : Pa$$myapp123
 
