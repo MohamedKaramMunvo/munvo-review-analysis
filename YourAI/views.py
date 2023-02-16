@@ -462,7 +462,7 @@ def buycoins(request):
             return pricingPage(request)
 
         # if coins are higher than 100 or less than 5
-        elif float(price) > 100 or float(price) < 0:
+        elif float(price) > 100 or float(price) < 5:
             print("Price is not between 5 and 100")
             return pricingPage(request)
 
