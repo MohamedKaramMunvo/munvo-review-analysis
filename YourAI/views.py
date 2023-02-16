@@ -11,7 +11,7 @@ from more_itertools import take
 from pyDes import triple_des
 from .EmotionAnalysis import predictEmotion, extractKeywords, predictSummary
 import pandas as pd
-from .models import YourAIUser
+from .models import YourAIUser, TransactionLog
 from .SMTP import *
 
 # constant varialble for coin price ($)
@@ -315,7 +315,6 @@ def register(request):
                     email=email,
                     password=cipherpassword, # encrypted password is saved
                     phone=phone, # expiry date default is now,
-                    pack='FREE',
                 )
                 user = User.objects.create_user(email, email, password)
 
@@ -328,8 +327,8 @@ def register(request):
             # send confirmation email
             subject = "Welcome to YourAI Platform!"
             body = "Dear "+aiuser.first_name+", we are excited to welcome you to YourAI\n" \
-                                             "To get started, please activate your email on the following link : https://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n" \
-                                             "As a welcome gift, we offer you 20 free credits to use!\n"+\
+                                             "To get started, please activate your email on the following link : https://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n\n" \
+                                             "As a welcome gift, we offer you 20 free coins to use!\n"+\
                                              "If you have any questions or issues, please let us know at team@youraiplatform.com\n\n\n"+\
                                              "Best regards\nYourAI Team"
 
@@ -463,12 +462,25 @@ def buycoins(request):
             return pricingPage(request)
 
         # if coins are higher than 100 or less than 5
-        elif float(price) > 100 or float(price) < 5:
+        elif float(price) > 100 or float(price) < 0:
             print("Price is not between 5 and 100")
             return pricingPage(request)
 
         # go to checkout page
         coins = int(float(price)/COIN_PRICE)+1
+
+        # log that user went to checkout page (pending operation)
+        try:
+            connected_user = request.user
+            userAI = YourAIUser.objects.get(email=connected_user.email)
+            log = TransactionLog(
+                email=userAI.email,
+                price=float(price),
+                status="pending"
+            )
+            log.save()
+        except Exception as e:
+            print("Transaction Log Exception:",e)
 
         return render(request,'checkout.html',context={
             "price":float(price),
@@ -501,10 +513,30 @@ def paymentSuccess(request):
         connected_user = request.user
         userAI = YourAIUser.objects.get(email=connected_user.email)
 
+        # log that payment is successful
+        try:
+            log = TransactionLog(
+                email=userAI.email,
+                price=int(coins) * COIN_PRICE,
+                status="success"
+            )
+            log.save()
+        except Exception as e:
+            print("Transaction Log Exception:", e)
+
         # adding coins to account
         YourAIUser.objects.filter(id=userAI.id).update(coins=userAI.coins+coins)
 
-        # saving trace of purchase
+        # send confirmation email
+        message = "Hello dear "+str(userAI.first_name)+",\nThank you for choosing YourAI! We are excited to let you know that your recent purchase has been successfully processed.\n" \
+                  "We confirm that you have purchased "+str(coins)+" coins from our platfrom, in order to use for our different features\n"\
+                  "if you have any questions or concerns about your purchase, please don't hesitate to contact us on team@youraiplatform.com, or also on the contact section of our website https://youraiplatform.com\n\n"\
+                  "Best regards\nYourAI Team"
+        try:
+            sendEmail(userAI.email, "Payment confirmation", message)
+        except:
+            pass
+
 
         return JsonResponse('OK', safe=False,status="200")
 

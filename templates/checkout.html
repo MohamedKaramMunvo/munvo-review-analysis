@@ -38,6 +38,59 @@
             <!-- Main Content -->
             <div id="content">
 
+                <!-- Loading Modal-->
+                <div class="modal" id="loadingModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+                    aria-hidden="true">
+                    <div class="modal-dialog" role="document">
+                        <div class="modal-content">
+                            <div class="modal-header">
+                                Loading...
+                            </div>
+                            <div class="modal-body">
+                                <div class="spinner-grow text-primary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-secondary" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-success" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-danger" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-warning" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-info" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-light" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <div class="spinner-grow text-dark" role="status">
+                                  <span class="sr-only">Loading...</span>
+                                </div>
+                                <br><br>
+                                Please wait, your payment is being processed...
+                            </div>
+                            <div class="modal-footer">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+
+                <!-- Loading Modal Script-->
+                <script>
+                    var loadingModal = document.getElementById("loadingModal");
+                    loadingModal.style.display = "none";
+
+                    function openModal(){
+                        loadingModal.style.display = "block";
+                    }
+                </script>
+
+
                 <!-- Topbar -->
                 <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
 
@@ -165,7 +218,7 @@
     </div>
 
     <!-- Paypal Script -->
-    <script src="https://www.paypal.com/sdk/js?client-id=AeCLuzhcNDf5C0FJJVXOPaK_J1k4C0SBjpesgXfvEFZrJsQmIE3Ggrtu4EX3bUdmQ888q_N2mtFEhGVN&currency=USD&locale=en_US"></script>
+    <script src="https://www.paypal.com/sdk/js?client-id=AYKa5TEcTJ4KYOSQJ4ntZzxiGj3F_PrIeptHlXg2gtGMh70OU2B-6S-3PCCt49U1pvJXVh0IOC-Q5AnO&currency=USD&locale=en_US"></script>
     <script>
         // Render the PayPal button into #paypal-button-container
         paypal.Buttons({
@@ -195,6 +248,9 @@
             onApprove: function(data, actions) {
                 return actions.order.capture().then(function(orderData) {
 
+                    // open waiting modal
+                    openModal();
+
                     var url = "/paymentSuccess"
                     var csrftoken = getToken('csrftoken')
 
@@ -213,7 +269,7 @@
                             location.href='/paymentDone'
                         }
                         else{
-                            alert("Payment failed ! please verify your details and retry")
+                            alert("Payment error: If you believe that your funds were debited,kindly reach out to us before asking a refund from Paypal")
                         }
                     })
                     .catch(err => {
@@ -224,7 +280,7 @@
             },
 
             onError: function (err) {
-                alert("Payment failed ! "+err)
+                alert("Payment failed ! please verify your details and retry (Error: "+err+")")
                 console.log('In onError', err)
             },
 

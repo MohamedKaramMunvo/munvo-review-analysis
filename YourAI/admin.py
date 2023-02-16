@@ -10,5 +10,10 @@ class YourAIAdmin(admin.ModelAdmin):
         self.list_display = [field.name for field in YourAIUser._meta.fields]
         super(YourAIAdmin, self).__init__(model, admin_site)
 
+class TransactionLogAdmin(admin.ModelAdmin):
+    def __init__(self, model, admin_site):
+        self.list_display = [field.name for field in TransactionLog._meta.fields]
+        super(TransactionLogAdmin, self).__init__(model, admin_site)
 
 admin.site.register(YourAIUser,YourAIAdmin)
+admin.site.register(TransactionLog,TransactionLogAdmin)

@@ -1,8 +1,5 @@
-from django.conf import settings
-from django.contrib.auth.hashers import check_password
 from django.contrib.auth.models import User
 from django.db import models
-from django.contrib.auth.backends import BaseBackend
 from .managers import YourAIUserManager
 
 
@@ -26,3 +23,16 @@ class YourAIUser(models.Model):
 
     objects = YourAIUserManager()
 
+
+# class to hold the payment transactions log
+class TransactionLog(models.Model):
+    id = models.AutoField(primary_key=True)
+    email = models.CharField(max_length=100)
+    datetime = models.DateTimeField(auto_now_add=True)
+    price = models.FloatField()
+    status = models.CharField(max_length=100) # { pending / success }
+    # pending : when customer arrive to checkout page
+    # success: after coins are assigned
+
+    def __str__(self):
+        return str(self.id)
