@@ -1,0 +1,281 @@
+<!DOCTYPE html>
+<html lang="en" xmlns="http://www.w3.org/1999/html">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1, shrink-to-fit=no">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Text AI</title>
+    <link rel="icon" type="image/x-icon" href="../statics/favicon.ico">
+
+    <!-- Custom fonts for this template-->
+    <link href="../statics/vendor/fontawesome-free/css/all.min.css" rel="stylesheet" type="text/css">
+    <link
+        href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i"
+        rel="stylesheet">
+
+    <!-- Custom styles for this template-->
+    <link href="../statics/css/sb-admin-2.min.css" rel="stylesheet">
+
+</head>
+
+<body id="page-top">
+
+    <!-- Page Wrapper -->
+    <div id="wrapper">
+
+        <!-- Sidebar -->
+        {% include "sidebar.html" %}
+        <!-- End of Sidebar -->
+
+        <!-- Content Wrapper -->
+        <div id="content-wrapper" class="d-flex flex-column">
+
+            <!-- Main Content -->
+            <div id="content">
+
+                <!-- Topbar -->
+                <nav class="navbar navbar-expand navbar-light bg-white topbar mb-4 static-top shadow">
+
+                    <!-- Sidebar Toggle (Topbar) -->
+                    <button id="sidebarToggleTop" class="btn btn-link d-md-none rounded-circle mr-3">
+                        <i class="fa fa-bars"></i>
+                    </button>
+
+
+
+
+                </nav>
+
+                <!-- End of Topbar -->
+                <!-- Begin Page Content -->
+                <div class="container">
+
+
+                    <!-- only display content of page if it was redirected from buy coins page -->
+                    {% if acceptPage %}
+
+                    <div class="text-center">
+                        <h1 class="h3 text-gray-900 mb-4">Checkout <i class="fas fa-fw fa-shopping-cart"></i></h1>
+                    </div>
+
+                    <div class="card o-hidden border-0 shadow-lg my-5">
+                        <div class="card-body p-0">
+                            <!-- Nested Row within Card Body -->
+                            <div class="row">
+                                <div class="col-lg-6">
+                                    <br><br><br>
+                                    <div class="text-center">
+                                        <h1 class="h4 text-gray-900 mb-4">Your purchase details</h1>
+                                        <h1 class="h6 text-gray-700 mb-4">Kindly verify your purchase details and proceed to payment</h1>
+                                    </div>
+
+                                    <div class="card-body">
+                                    <div class="table-responsive">
+                                    <table class="table">
+                                      <thead>
+                                        <tr>
+                                          <th scope="col">Coins</th>
+                                          <th scope="col">Total amount</th>
+                                        </tr>
+                                      </thead>
+                                      <tbody>
+                                        <tr>
+                                          <td>{{ coins }}</td> <input type="hidden" id="credit_id" value="{{ coins }}"/>
+                                          <td>{{ price }} $</td>
+                                        </tr>
+                                      </tbody>
+                                    </table>
+                                    </div>
+                                    </div>
+
+                                    <div class="p-5">
+                                        <br><br>
+
+                                        <form class="user" >
+                                            {% csrf_token %}
+                                            <center><div id="paypal-button-container"></div></center>
+                                        </form>
+                                        <br>
+
+
+                                    </div>
+
+                                </div>
+
+                                <div class="col-lg-6">
+                                    <br><br><br>
+                                    <img src="../statics/img/cart.svg" height="auto" width="500" alt=""/>
+                                </div>
+
+                            </div>
+
+
+                        </div>
+                    </div>
+
+                    {% endif %}
+
+
+                </div>
+                <!-- End of Main Content -->
+
+            </div>
+            <!-- Footer -->
+            {% include "footer.html" %}
+            <!-- End of Footer -->
+
+
+
+
+
+        </div>
+        <!-- End of Content Wrapper -->
+
+    </div>
+    <!-- End of Page Wrapper -->
+
+    <!-- Scroll to Top Button-->
+    <a class="scroll-to-top rounded" href="#page-top">
+        <i class="fas fa-angle-up"></i>
+    </a>
+
+    <!-- Logout Modal-->
+    <div class="modal fade" id="logoutModal" tabindex="-1" role="dialog" aria-labelledby="exampleModalLabel"
+        aria-hidden="true">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="exampleModalLabel">Ready to Leave?</h5>
+                    <button class="close" type="button" data-dismiss="modal" aria-label="Close">
+                        <span aria-hidden="true">×</span>
+                    </button>
+                </div>
+                <div class="modal-body">Select "Logout" below if you are ready to end your current session.</div>
+                <div class="modal-footer">
+                    <button class="btn btn-secondary" type="button" data-dismiss="modal">Cancel</button>
+                    <a class="btn btn-primary" href="login.html">Logout</a>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Paypal Script -->
+    <script src="https://www.paypal.com/sdk/js?client-id=AeCLuzhcNDf5C0FJJVXOPaK_J1k4C0SBjpesgXfvEFZrJsQmIE3Ggrtu4EX3bUdmQ888q_N2mtFEhGVN&currency=USD&locale=en_US"></script>
+    <script>
+        // Render the PayPal button into #paypal-button-container
+        paypal.Buttons({
+
+            // customize buttons
+            locale: 'en_US',
+            style: {
+             layout:  'vertical',
+             color:   'blue',
+             shape:   'rect',
+             label:   'paypal'
+            },
+
+            // Set up the transaction
+            createOrder: function(data, actions) {
+                // submit payment
+                return actions.order.create({
+                    purchase_units: [{
+                        amount: {
+                            value : '{{ price }}'
+                        }
+                    }]
+                });
+            },
+
+            // Finalize the transaction
+            onApprove: function(data, actions) {
+                return actions.order.capture().then(function(orderData) {
+
+                    var url = "/paymentSuccess"
+                    var csrftoken = getToken('csrftoken')
+
+                    fetch(url, {
+                      method: "POST",
+                      headers: {
+                          'Content-Type': 'application/json',
+                          'X-CSRFToken':csrftoken,
+                      },
+                      body: JSON.stringify({
+                          'coins': '{{ coins }}'
+                      })
+                    }).then(res => {
+                        console.log(res)
+                        if(res.status=='200'){
+                            location.href='/paymentDone'
+                        }
+                        else{
+                            alert("Payment failed ! please verify your details and retry")
+                        }
+                    })
+                    .catch(err => {
+                        alert("Internal payment error :"+err)
+                    });
+
+                });
+            },
+
+            onError: function (err) {
+                alert("Payment failed ! "+err)
+                console.log('In onError', err)
+            },
+
+
+
+
+
+        }).render('#paypal-button-container');
+
+        function getToken(name) {
+		    var cookieValue = null;
+		    if (document.cookie && document.cookie !== '') {
+		        var cookies = document.cookie.split(';');
+		        for (var i = 0; i < cookies.length; i++) {
+		            var cookie = cookies[i].trim();
+		            // Does this cookie string begin with the name we want?
+		            if (cookie.substring(0, name.length + 1) === (name + '=')) {
+		                cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
+		                break;
+		            }
+		        }
+		    }
+		    return cookieValue;
+		}
+    </script>
+    <!---->
+
+
+
+
+
+
+
+
+    <!-- Bootstrap core JavaScript-->
+    <script src="../statics/vendor/jquery/jquery.min.js"></script>
+    <script src="../statics/vendor/bootstrap/js/bootstrap.bundle.min.js"></script>
+
+    <!-- Core plugin JavaScript-->
+    <script src="../statics/vendor/jquery-easing/jquery.easing.min.js"></script>
+
+    <!-- Custom scripts for all pages-->
+    <script src="../statics/js/sb-admin-2.min.js"></script>
+
+    <!-- Page level plugins -->
+    <script src="../statics/vendor/chart.js/Chart.min.js"></script>
+
+    <!-- Page level custom scripts -->
+    <script src="../statics/js/demo/chart-area-demo.js"></script>
+    <script src="../statics/js/demo/chart-pie-demo.js"></script>
+
+</body>
+
+</html>

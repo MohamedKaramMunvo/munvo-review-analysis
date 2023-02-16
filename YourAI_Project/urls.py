@@ -43,12 +43,18 @@ urlpatterns = [
     path(r'upload',views.uploadFile),
     # api description page
     path(r'apiPage',views.apiPage),
-    # api url
-    path(r'api',views.api),
+    # sentiment api url
+    path(r'api/sentiment',views.apisentiment),
+    # summary api url
+    path(r'api/summary',views.apisummary),
     # buy coins url
     path(r'buycoins',views.buycoins),
     # activation url
     path(r'activate',views.activate),
+    # payment success url
+    path(r'paymentSuccess',views.paymentSuccess),
+    # checkout success page
+    path(r'paymentDone',views.paymentDone),
 
     # register page
     path(r'registerPage',views.registerPage),

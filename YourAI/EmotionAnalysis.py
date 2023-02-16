@@ -36,7 +36,32 @@ def predictEmotion(x):
 
         return (pred, score)
     except:
-        return ('Error',0)
+        return ('-1',0)
+
+
+def predictSummary(text):
+
+    try:
+        model_engine = "text-davinci-003"
+        prompt = f"Extract a very short summary of the following sentence {text}"
+        completions = openai.Completion.create(
+            engine=model_engine,
+            prompt=prompt,
+            max_tokens=100,
+            n=1,
+            stop=None,
+            temperature=0.5,
+        )
+
+        # Get the first completion
+        message = completions.choices[0].text
+
+        message = message.replace("\n","")
+
+        # return result
+        return message.strip()
+    except:
+        return '-1'
 
 
 def extractKeywords(text):

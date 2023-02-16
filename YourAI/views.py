@@ -9,7 +9,7 @@ from django.shortcuts import render
 from django.views.decorators.csrf import csrf_exempt
 from more_itertools import take
 from pyDes import triple_des
-from .EmotionAnalysis import predictEmotion, extractKeywords
+from .EmotionAnalysis import predictEmotion, extractKeywords, predictSummary
 import pandas as pd
 from .models import YourAIUser
 from .SMTP import *
@@ -154,7 +154,7 @@ def apiPage(request):
 
 # api sentiment analysis
 @csrf_exempt
-def api(request):
+def apisentiment(request):
     # if POST
     if request.method == 'POST':
         try:
@@ -212,7 +212,7 @@ def api(request):
 
 # api sentiment analysis + summarize
 @csrf_exempt
-def apiv2(request):
+def apisummary(request):
     # if POST
     if request.method == 'POST':
         try:
@@ -244,13 +244,23 @@ def apiv2(request):
                     return HttpResponse(status="255",
                                         content="Incorrect user password")  # 255 incorrect password
 
-                # check if expiry date and pack (later)
+                # return error if no enough credits (price = 1 coin)
+                if user.coins - 1 < 0:
+                    return HttpResponse(status="270",
+                                        content="Not enough credits for the request")  # 270 user doesnt exist
 
-                emotion = predictEmotion(text)
+                summary = predictSummary(text)
+
+                # in case of error
+                if summary == '-1':
+                    return HttpResponse(status="500",
+                                        content="Internal Error, please make sure to have correct review text and credentials")  # 500 : internal error
+
+                # consuming 0.5 coins after making sure everything is good
+                YourAIUser.objects.filter(id=user.id).update(coins=user.coins - 1)
 
                 return JsonResponse({
-                    "sentiment":emotion[0],
-                    "score":emotion[1]
+                    "summary":summary
                 }) # 200 : good
 
         except Exception as e:
@@ -459,10 +469,52 @@ def buycoins(request):
 
         # go to checkout page
         coins = int(float(price)/COIN_PRICE)+1
-        print("Price : ",price," COINS : ",coins)
+
+        return render(request,'checkout.html',context={
+            "price":float(price),
+            "coins":coins,
+            "acceptPage":True
+        })
 
     else :
         return render(request, 'error/404.html')
+
+# successful payment action ( should only be accessible from the website )
+## that is why we treat the current session used and not retrieve email id from the request
+## csrf token is also used to make sure that we use the web app form
+@login_required
+def paymentSuccess(request):
+
+    if request.method == 'POST':
+
+        # getting purchased coins
+        data = json.loads(request.body)
+        coins = data['coins']
+
+        # checking if coins value is correct
+        try:
+            coins = int(coins)
+        except:
+            return JsonResponse('Coins value is not supported', safe=False, status="500")
+
+        # getting actual user
+        connected_user = request.user
+        userAI = YourAIUser.objects.get(email=connected_user.email)
+
+        # adding coins to account
+        YourAIUser.objects.filter(id=userAI.id).update(coins=userAI.coins+coins)
+
+        # saving trace of purchase
+
+        return JsonResponse('OK', safe=False,status="200")
+
+    else:
+        return JsonResponse('METHOD NOT SUPPORTED', safe=False,status="417")
+
+@login_required
+# payment done page
+def paymentDone(request):
+    return render(request,'payment_success.html')
 
 # register page
 def registerPage(request):
