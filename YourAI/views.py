@@ -325,11 +325,11 @@ def register(request):
                 user.save()
 
             # send confirmation email
-            subject = "Welcome to YourAI Platform!"
-            body = "Dear "+aiuser.first_name+", we are excited to welcome you to YourAI\n" \
-                                             "To get started, please activate your email on the following link : https://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n\n" \
-                                             "As a welcome gift, we offer you 20 free coins to use!\n"+\
-                                             "If you have any questions or issues, please let us know at team@youraiplatform.com\n\n\n"+\
+            subject = "Welcome to YourAI Platform - Please Confirm Your Email"
+            body = "Dear "+aiuser.first_name+"\n\n" \
+                                             "We are thrilled to welcome you to the YourAI Platform! To get started, please confirm your email address by clicking on the following link:\nhttps://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n\n" \
+                                             "As a welcome gift, we would like to offer you 20 free coins to use on the platform. You can start exploring the many features of the YourAI Platform right away!\n"+\
+                                             "If you have any questions or run into any issues, please do not hesitate to reach out to us at team@youraiplatform.com. We are always here to help you.\n\n"+\
                                              "Best regards\nYourAI Team"
 
             sendEmail(aiuser.email,subject,body)
@@ -528,12 +528,14 @@ def paymentSuccess(request):
         YourAIUser.objects.filter(id=userAI.id).update(coins=userAI.coins+coins)
 
         # send confirmation email
-        message = "Hello dear "+str(userAI.first_name)+",\nThank you for choosing YourAI! We are excited to let you know that your recent purchase has been successfully processed.\n" \
-                  "We confirm that you have purchased "+str(coins)+" coins from our platfrom, in order to use for our different features\n"\
-                  "if you have any questions or concerns about your purchase, please don't hesitate to contact us on team@youraiplatform.com, or also on the contact section of our website https://youraiplatform.com\n\n"\
+        message = "Dear "+str(userAI.first_name)+",\n\nWe hope this email finds you well. We wanted to take a moment to thank you for choosing the YourAI Platform and to let you know that your recent purchase has been successfully processed.\n\n" \
+                  "According to our records, you have purchased "+str(coins)+" coins that you can use to access and explore our features of the YourAI Platform.\n\n"\
+                  "If you have any questions or concerns about your purchase, please do not hesitate to reach out to us at team@youraiplatform.com. Alternatively, you can use the \"Contact Us\" section on our website at https://youraiplatform.com to get in touch with us.\n\n"\
+                  "We are always here to help you, so please don't hesitate to contact us if you need any assistance.\n\n"\
+                  "Thank you again for choosing the YourAI Platform. We look forward to serving you in the future.\n\n"\
                   "Best regards\nYourAI Team"
         try:
-            sendEmail(userAI.email, "Payment confirmation", message)
+            sendEmail(userAI.email, "Payment Confirmation - YourAI Platform", message)
         except:
             pass
 
@@ -581,12 +583,14 @@ def forgotPassword(request):
             activation_link = "https://app.youraiplatform.com/activate?user="+str(aiuser.id)
 
             # resend email with password
-            message = "Hey dear "+str(aiuser.first_name)+"\nPlease find your password (make sure to save it somewhere safe) : "+decrypted_password+"\n" \
-                                                            "And the link to activate your account (if not) : "+activation_link+"\n\n\n"\
+            message = "Hello "+str(aiuser.first_name)+"\n\nWe hope this message finds you well. We are writing to provide you with your login credentials for the YourAI Platform. Please find your password below:\nPassword: "+decrypted_password+"\n\n" \
+                                                            "Please make sure to save your password in a secure location.\n\n"\
+                                                            "In addition, if you have not yet activated your account, please use the following link:\n"+activation_link+"\n\n"\
+                                                            "Thank you for choosing the YourAI Platform. If you have any questions or issues, please do not hesitate to contact us.\n\n"\
                                                             "Best regards\nYourAI Team"
 
             try:
-                sendEmail(aiuser.email,"Resend password and activation link",message)
+                sendEmail(aiuser.email,"Your Password and Account Activation for YourAI Platform",message)
             except Exception as e:
                 print(e)
                 return render(request, 'registration/forgotpassword.html', context={
