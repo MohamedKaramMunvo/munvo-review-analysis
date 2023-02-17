@@ -33,6 +33,15 @@ Hôte MySQL : localhost
 Mot de passe MySQL : 7)S@3Bap13
 
 
+------ MySQL DB for app ------
+// Hosted on Digitalocean instance (MySQL 8)
+root password : root
+user : userdb
+password : dbpass$$$
+// connect to db on server : mysql -uroot -p
+// CREATE USER 'sammy'@'remote_server_ip' IDENTIFIED BY 'password'; --> to allow current IP
+
+
 ------ Postmark ------
 username : mkaram
 password : v5MML3LBv:H88Aj
