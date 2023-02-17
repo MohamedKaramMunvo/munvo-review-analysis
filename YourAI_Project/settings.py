@@ -105,15 +105,8 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         ## Dev database (SQLite)
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db.sqlite3', # change into prod before deploy
-        ## Prod database (MySQL)
-        'ENGINE': 'django.db.backends.mysql',
-        'NAME': 'mysql',
-        'USER': 'userdb',
-        'PASSWORD': 'dbpass$$$',
-        'HOST':'localhost', # when dev : 147.182.245.126
-        'PORT':'3306',
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db_prod.sqlite3', # change into prod before deploy
     }
 }
 
