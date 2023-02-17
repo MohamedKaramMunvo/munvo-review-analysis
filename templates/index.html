@@ -116,49 +116,56 @@
 
 
                         </div>
-                        <div class="card shadow mb-4">
-                                    <div class="card-header py-3">
-                                        <h6 class="m-0 font-weight-bold text-primary">How to upload data?</h6>
-                                    </div>
+                        <div class="row">
+                            <div class="col-xl-6 col-lg-5">
+                                <div class="card shadow mb-4">
                                     <div class="card-body">
-                                        <p class="mb-4">Please make sure to upload a csv file (delimited with semicolon) with the column (<strong>Reviews</strong>)
-                                        which stands for the review/comment to analyze</strong>, you can check an example <a href="/dataexamplePage">here</a></p>
+                                        <p class="mb-4">Please upload a CSV file containing reviews, see tips and check this <a href="/dataexamplePage">example</a></p>
+                                                <form method="POST" action="/upload" enctype="multipart/form-data">
+                                                    {% csrf_token %}
 
-
-                                        <form method="POST" action="/upload" enctype="multipart/form-data">
-                                            {% csrf_token %}
-
-                                            <div class="row">
-                                                <div class="col-xl-3 col-md-6 mb-4">
-                                                <div class="custom-file">
-                                                  <input type="file" class="custom-file-input" id="dataFile" onchange="changeFile()" name="dataFile">
-                                                  <label class="custom-file-label" id="fileName" for="dataFile"></label>
-                                                  <script>
-                                                      var fileinput = document.getElementById("dataFile");
-                                                      var filename = document.getElementById("fileName");
-                                                      filename.textContent = "Choose a file";
-                                                      function changeFile(){
-                                                          console.log("File : "+fileinput.files[0].name)
-                                                          filename.textContent = fileinput.files[0].name;
-                                                      }
-                                                  </script>
-                                                </div>
-                                                </div>
-                                                <div class="col-xl-3 col-md-6 mb-4">
-                                                <div class="input-group-append">
-                                                    <button type="submit" class="btn btn-primary" onclick="openModal()">Upload</button>
-                                                </div>
-                                                </div>
-                                            </div>
-                                            {% if error %}
-                                                    <div class="alert alert-warning" role="alert">
-                                                        {{ errorMessage }}
+                                                    <div class="row">
+                                                        <div class="col-xl-6 col-md-6 mb-4">
+                                                        <div class="custom-file">
+                                                          <input type="file" class="custom-file-input" id="dataFile" onchange="changeFile()" name="dataFile">
+                                                          <label class="custom-file-label" id="fileName" for="dataFile"></label>
+                                                          <script>
+                                                              var fileinput = document.getElementById("dataFile");
+                                                              var filename = document.getElementById("fileName");
+                                                              filename.textContent = "Choose a file";
+                                                              function changeFile(){
+                                                                  console.log("File : "+fileinput.files[0].name)
+                                                                  filename.textContent = fileinput.files[0].name;
+                                                              }
+                                                          </script>
+                                                        </div>
+                                                        </div>
+                                                        <div class="col-xl-3 col-md-6 mb-4">
+                                                        <div class="input-group-append">
+                                                            <button type="submit" class="btn btn-primary" onclick="openModal()">Upload</button>
+                                                        </div>
+                                                        </div>
                                                     </div>
-                                            {% endif %}
-                                        </form>
+                                                    {% if error %}
+                                                            <div class="alert alert-warning" role="alert">
+                                                                {{ errorMessage }}
+                                                            </div>
+                                                    {% endif %}
+                                                </form>
 
+                                            </div>
+                                </div>
+                            </div>
+                            <div class="col-xl-6 col-lg-5">
+                                <div class="card shadow mb-4">
+                                    <div class="card-body">
+                                        <p class="mb-3">CSV file tips:
+                                        <h5><i class="fas fa-fw fa-exclamation-circle" style="color: orange"></i>&nbsp; Delimited by semicolons [ ; ]</h5>
+                                        <h5><i class="fas fa-fw fa-exclamation-circle" style="color: orange"></i>&nbsp; Contains "Reviews" column</h5>
+                                        </p>
                                     </div>
-
+                                </div>
+                            </div>
                         </div>
                         <!-- Content Row -->
                         <div class="row">
