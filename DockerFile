@@ -15,8 +15,8 @@ RUN apt-get update \
 RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
+CMD ["apt-get","update"]
 CMD ["apt-get","install","libmysqlclient-dev"]
-RUN apt update && apt add mysql-client
 
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
