@@ -16,6 +16,7 @@ RUN mkdir -p /usr/src/app
 WORKDIR /usr/src/app
 
 CMD ["apt-get","install","libmysqlclient-dev"]
+RUN apk update && apk add mysql-client
 
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
