@@ -14,7 +14,7 @@ RUN apt-get update \
 
 RUN mkdir -p /usr/src/app
 RUN apt-get update \
-    && apt-get -yy install libmariadb-dev && apt-get -yy install libmysqlclient-dev
+    && apt-get -yy install libmariadb-dev && apt-get -yy install default-libmysqlclient-dev
 
 WORKDIR /usr/src/app
 
