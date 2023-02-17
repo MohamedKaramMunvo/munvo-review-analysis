@@ -17,7 +17,7 @@ def sendEmail(address,subject,message):
     msg.attach(MIMEText(body, 'plain'))
 
     text = msg.as_string()
-    server = smtplib.SMTP('mail.youraiplatform.com', 465)
+    server = smtplib.SMTP('mail.youraiplatform.com', 587)
     server.starttls()
     server.login(sender_email, password)
     server.sendmail(sender_email, receiver_email, text)
