@@ -10,7 +10,7 @@ def sendEmail(address,subject,message):
     password = "aD@s788**?kls"
 
     msg = MIMEMultipart()
-    msg['From'] = formataddr(('YourAI', sender_email))
+    msg['From'] = formataddr(('YourAI Platform', sender_email))
     msg['To'] = receiver_email
     msg['Subject'] = subject
     body = message
