@@ -13,10 +13,10 @@ RUN apt-get update \
     && rm -rf /var/lib/apt/lists/*
 
 RUN mkdir -p /usr/src/app
-WORKDIR /usr/src/app
+RUN apt-get update \
+    && apt-get -yy install libmariadb-dev && apt-get -yy install libmysqlclient-dev
 
-CMD ["apt-get","update"]
-CMD ["apt-get","install","libmysqlclient-dev"]
+WORKDIR /usr/src/app
 
 COPY ./requirements.txt /requirements.txt
 RUN pip install --no-cache-dir -r /requirements.txt \
