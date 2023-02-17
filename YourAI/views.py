@@ -587,7 +587,8 @@ def forgotPassword(request):
 
             try:
                 sendEmail(aiuser.email,"Resend password and activation link",message)
-            except:
+            except Exception as e:
+                print(e)
                 return render(request, 'registration/forgotpassword.html', context={
                     'successActivate': False,
                     'messageActivate': 'Oops! internal error'
