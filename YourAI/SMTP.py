@@ -3,8 +3,6 @@ from email.mime.multipart import MIMEMultipart
 from email.mime.text import MIMEText
 from email.utils import formataddr
 
-from postmarker.core import PostmarkClient
-
 POSTMARK_SMTP_TOKEN = "04f27eff-d13a-41c0-a702-a2fe209b4b59"
 
 def sendEmail(address,subject,message):
