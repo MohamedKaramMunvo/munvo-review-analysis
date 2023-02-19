@@ -1,4 +1,5 @@
 import ast
+import hashlib
 import json
 import numpy as np
 from django.contrib.auth.decorators import login_required
@@ -318,6 +319,10 @@ def register(request):
                 )
                 user = User.objects.create_user(email, email, password)
 
+                # we generate a hash token for this user
+                token = hashlib.shake_128(str(email).encode('utf-8')).hexdigest(4)
+                aiuser.token = str(token)
+
                 # user is inactive by default
                 aiuser.is_active = False
 
@@ -327,7 +332,7 @@ def register(request):
             # send confirmation email
             subject = "Welcome to YourAI Platform - Please Confirm Your Email"
             body = "Dear "+aiuser.first_name+"\n\n" \
-                                             "We are thrilled to welcome you to the YourAI Platform! To get started, please confirm your email address by clicking on the following link:\nhttps://app.youraiplatform.com/activate?user="+str(aiuser.id)+"\n\n" \
+                                             "We are thrilled to welcome you to the YourAI Platform! To get started, please confirm your email address by clicking on the following link:\nhttps://app.youraiplatform.com/activate?user="+str(aiuser.token)+"\n\n" \
                                              "As a welcome gift, we would like to offer you 20 free coins to use on the platform. You can start exploring the many features of the YourAI Platform right away!\n"+\
                                              "If you have any questions or run into any issues, please do not hesitate to reach out to us at team@youraiplatform.com. We are always here to help you.\n\n"+\
                                              "Best regards\nYourAI Team"
@@ -336,7 +341,7 @@ def register(request):
 
             return render(request, 'registration/register.html', context={
                 'sent': True,
-                'message': 'Your account has been created successfully, please check your email for activation (check spam also)'
+                'message': 'Your account has been created successfully, please check your email for activation, CHECK SPAM AND PROMOTION'
             })
 
         except Exception as e:
@@ -354,16 +359,16 @@ def activate(request):
     if request.method == 'GET':
         # get user id
         if request.GET.get('user') :
-            id = int(request.GET.get('user'))
+            id = str(request.GET.get('user'))
 
             # if id doesnt exist then we raise an error
-            if not YourAIUser.objects.filter(id=id).exists():
+            if not YourAIUser.objects.filter(token=id).exists():
                 return render(request, 'registration/login.html', context={
                     'successActivate': False,
                     'messageActivate': 'User not found'
                 })
 
-            aiuser = YourAIUser.objects.filter(id=id).update(is_active=True)
+            aiuser = YourAIUser.objects.filter(token=id).update(is_active=True)
 
             return render(request, 'registration/login.html', context={
                 'successActivate': True,
@@ -580,7 +585,7 @@ def forgotPassword(request):
             decrypted_password = str(decrypted_password, "utf-8")
 
             # retrieve activation link
-            activation_link = "https://app.youraiplatform.com/activate?user="+str(aiuser.id)
+            activation_link = "https://app.youraiplatform.com/activate?user="+str(aiuser.token)
 
             # resend email with password
             message = "Hello "+str(aiuser.first_name)+"\n\nWe hope this message finds you well. We are writing to provide you with your login credentials for the YourAI Platform. Please find your password below:\nPassword: "+decrypted_password+"\n\n" \
@@ -601,7 +606,7 @@ def forgotPassword(request):
 
             return render(request, 'registration/forgotpassword.html', context={
                 'successActivate': True,
-                'messageActivate': 'Your password and activation link were sent to your email, please also check spam'
+                'messageActivate': 'Your password and activation link were sent to your email, CHECK SPAM AND PROMOTION'
             })
 
 

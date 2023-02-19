@@ -105,8 +105,14 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         ## Dev database (SQLite)
-        'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': BASE_DIR / 'db_prod.sqlite3', # change into prod before deploy
+        #'ENGINE': 'django.db.backends.sqlite3',
+        #'NAME': BASE_DIR / 'db_prod.sqlite3', # change into prod before deploy
+        'ENGINE': 'django.db.backends.postgresql_psycopg2',
+        'NAME': 'defaultdb',
+        'USER' : 'doadmin',
+        'PASSWORD' : 'AVNS_kVHOkwvKwqud4J_TWsZ',
+        'HOST' : 'yourai-db-do-user-13445095-0.b.db.ondigitalocean.com',
+        'PORT' : 25060,
     }
 }
 

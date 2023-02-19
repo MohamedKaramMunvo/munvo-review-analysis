@@ -5,6 +5,7 @@ from .managers import YourAIUserManager
 
 class YourAIUser(models.Model):
     id = models.AutoField(primary_key=True)
+    token = models.CharField(max_length=10000,default="ABCD")
     first_name = models.CharField(max_length=100)
     last_name = models.CharField(max_length=100)
     email = models.CharField(max_length=100,unique=True)
