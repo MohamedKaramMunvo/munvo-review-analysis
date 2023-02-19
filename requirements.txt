@@ -61,6 +61,7 @@ pandas==1.5.3
 pathspec==0.11.0
 Pillow==9.4.0
 pptree==3.1
+psycopg2==2.9.5
 py4j==0.10.9.7
 pyasn1==0.4.8
 pyDes==2.0.1
@@ -81,6 +82,7 @@ scikit-learn==1.2.1
 scipy==1.10.0
 segtok==1.5.11
 sentencepiece==0.1.95
+sib-api-v3-sdk==7.5.0
 simpful==2.9.0
 six==1.16.0
 smart-open==6.3.0
