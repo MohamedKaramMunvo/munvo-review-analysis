@@ -34,11 +34,11 @@ urlpatterns = [
     # free trial page
     path(r'trial',views.trialPage),
     # free trial detect emotion
-    path(r'detectEmotionTrial',views.detectEmotionTrial),
+    #path(r'detectEmotionTrial',views.detectEmotionTrial),
     # data example page
     path(r'dataexamplePage',views.dataexamplePage),
     # pricing page
-    path(r'pricingPage',views.pricingPage),
+    #path(r'pricingPage',views.pricingPage),
     # upload file
     path(r'upload',views.uploadFile),
     # api description page
@@ -48,33 +48,33 @@ urlpatterns = [
     # summary api url
     path(r'api/summary',views.apisummary),
     # buy coins url
-    path(r'buycoins',views.buycoins),
+    #path(r'buycoins',views.buycoins),
     # activation url
-    path(r'activate',views.activate),
+    #path(r'activate',views.activate),
     # payment success url
-    path(r'paymentSuccess',views.paymentSuccess),
+    #path(r'paymentSuccess',views.paymentSuccess),
     # checkout success page
-    path(r'paymentDone',views.paymentDone),
+    #path(r'paymentDone',views.paymentDone),
 
     # register page
-    path(r'registerPage',views.registerPage),
+    #path(r'registerPage',views.registerPage),
     # register
-    path(r'register',views.register),
+    #path(r'register',views.register),
     # login page
-    path(r'loginPage',views.loginPage),
+    #path(r'loginPage',views.loginPage),
     # forgot password page
-    path(r'forgotPasswordPage',views.forgotPasswordPage),
+    #path(r'forgotPasswordPage',views.forgotPasswordPage),
     # forgot password
-    path(r'forgotPassword',views.forgotPassword),
+    #path(r'forgotPassword',views.forgotPassword),
 
     # http codes description
     path(r'httpcodesPage',views.httpDescription),
 
 
     # login page
-    path(r'login',auth_views.LoginView.as_view(),name="login"),
+    #path(r'login',auth_views.LoginView.as_view(),name="login"),
     # logout
-    path(r'logout', auth_views.LogoutView.as_view(), name='logout'),
+    #path(r'logout', auth_views.LogoutView.as_view(), name='logout'),
 
 
 

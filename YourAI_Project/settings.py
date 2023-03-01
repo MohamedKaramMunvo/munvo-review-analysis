@@ -26,7 +26,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 SECRET_KEY = 'django-insecure-zimsg1(^jlc&+5h97wot$47)4rvgq2p$8vfc-y%(wqa%26t$m#'
 
 # SECURITY WARNING: don't run with debug turned on in production!
-DEBUG = False
+DEBUG = True
 
 ALLOWED_HOSTS = ['*']
 
@@ -64,15 +64,15 @@ MIDDLEWARE = [
 ]
 
 # Auth backend
-AUTHENTICATION_BACKENDS = [
+#AUTHENTICATION_BACKENDS = [
     #'django.contrib.auth.backends.ModelBackend', # This is the default that allows us to log in via username
-    'YourAI.authentication.EmailAuthBackend'
-]
+#    'YourAI.authentication.EmailAuthBackend'
+#]
 
 # Auth
-LOGIN_URL = '/login'
-LOGIN_REDIRECT_URL = '/home'
-LOGOUT_REDIRECT_URL = '/login'
+#LOGIN_URL = '/login'
+#LOGIN_REDIRECT_URL = '/home'
+#LOGOUT_REDIRECT_URL = '/login'
 #AUTH_USER_MODEL = "YourAI.YourAIUser"
 ##
 
@@ -105,14 +105,8 @@ TEMPLATES = [
 DATABASES = {
     'default': {
         ## Dev database (SQLite)
-        #'ENGINE': 'django.db.backends.sqlite3',
-        #'NAME': BASE_DIR / 'db_prod.sqlite3', # change into prod before deploy
-        'ENGINE': 'django.db.backends.postgresql_psycopg2',
-        'NAME': 'defaultdb',
-        'USER' : 'doadmin',
-        'PASSWORD' : 'AVNS_kVHOkwvKwqud4J_TWsZ',
-        'HOST' : 'yourai-db-do-user-13445095-0.b.db.ondigitalocean.com',
-        'PORT' : 25060,
+        'ENGINE': 'django.db.backends.sqlite3',
+        'NAME': BASE_DIR / 'db_prod.sqlite3', # change into prod before deploy
     }
 }
 

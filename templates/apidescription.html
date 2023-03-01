@@ -51,7 +51,7 @@
                 <!-- Title -->
                 <h1 class="h3 mb-2 text-gray-800">Review analysis REST API</h1>
                 <p class="mb-4">
-                    YourAI REST API allows developers to easily integrate reviews analysis capabilities into their existing platforms.
+                    The REST API allows developers to easily integrate reviews analysis capabilities into their existing platforms.
                     With just a simple, fast and well-built API call, you can send a review text and receive its sentiment analysis, or summarize it into one single sentence.
                     Whether you're building a customer feedback platform, conducting market research, or monitoring social media sentiment, this API can be the perfect
                     solution for you.<br>
@@ -65,7 +65,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                            <span class="badge bg-info text-white">POST</span> &nbsp;&nbsp; https://app.youraiplatform.com/api/sentiment
+                                            <span class="badge bg-info text-white">POST</span> &nbsp;&nbsp; /api/sentiment
                                         </div>
                                     </div>
 
@@ -79,7 +79,7 @@
                                 <div class="row no-gutters align-items-center">
                                     <div class="col mr-2">
                                         <div class="h5 mb-0 font-weight-bold text-gray-800">
-                                            <span class="badge bg-info text-white">POST</span> &nbsp;&nbsp; https://app.youraiplatform.com/api/summary
+                                            <span class="badge bg-info text-white">POST</span> &nbsp;&nbsp; /api/summary
                                         </div>
                                     </div>
 
@@ -106,8 +106,6 @@
                                 <div class="p-3 bg-gray-300 text-black-50">
                                 <samp>
                                     {<br>
-                                    &nbsp;&nbsp;"<strong>email</strong>" : "myemail@domain.com",<br>
-                                    &nbsp;&nbsp;"<strong>password</strong>" : "mypassword123",<br>
                                     &nbsp;&nbsp;"<strong>text</strong>" : "i was very satisfied with this service"<br>
                                     }
                                 </samp>
@@ -142,8 +140,6 @@
                                 <div class="p-3 bg-gray-300 text-black-50">
                                 <samp>
                                     {<br>
-                                    &nbsp;&nbsp;"<strong>email</strong>" : "myemail@domain.com",<br>
-                                    &nbsp;&nbsp;"<strong>password</strong>" : "mypassword123",<br>
                                     &nbsp;&nbsp;"<strong>text</strong>" : "Product arrived labeled as Jumbo Salted Peanuts...the peanuts were<br>&nbsp;&nbsp;&nbsp;&nbsp; actually small sized and unsalted. not just that but i also got a different <br>&nbsp;&nbsp;&nbsp;&nbsp; box color than the one stated on the website"<br>
                                     }
                                 </samp>
@@ -155,7 +151,7 @@
                                 <div class="p-3 bg-gray-300 text-black-50">
                                 <samp>
                                     {<br>
-                                        &nbsp;&nbsp;"summary": "The product was mislabeled and contained small, unsalted peanuts in<br>&nbsp;&nbsp;&nbsp;&nbsp; a different box color than advertised.",<br>
+                                        &nbsp;&nbsp;"summary": "The product was mislabeled and contained small, unsalted peanuts in a different box color than advertised.",<br>
                                     }
                                 </samp>
                                 </div>

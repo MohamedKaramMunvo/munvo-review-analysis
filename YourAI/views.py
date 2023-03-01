@@ -20,32 +20,16 @@ COIN_PRICE = 0.03
 
 
 # home dashboard
-@login_required
 def home(request):
-    # get the connected user
-    connected_user = request.user
-    userAI = YourAIUser.objects.get(email=connected_user.email)
-
-    context = {
-        'user':userAI
-    }
-
-    return render(request,'index.html',context=context)
+    return render(request,'index.html')
 
 # data example page
-@login_required
 def dataexamplePage(request):
     return render(request, 'dataexample.html')
 
 # upload file
-@login_required
 def uploadFile(request):
-    # get the connected user
-    connected_user = request.user
-    userAI = YourAIUser.objects.get(email=connected_user.email)
-
     context = {
-        'user': userAI
     }
 
     try:
@@ -55,9 +39,7 @@ def uploadFile(request):
             fs = FileSystemStorage()
 
             # with create the file with a folder with the user's name to avoid concurrent access
-            if fs.exists(str(userAI.email)+'/data.csv'):
-                fs.delete(str(userAI.email)+'/data.csv')
-            filename = fs.save(str(userAI.email)+'/data.csv', file)  # saving file with same name to overwrite it on each upload
+            filename = fs.save('data.csv', file)  # saving file with same name to overwrite it on each upload
             # uploaded_file_url = fs.url(filename)
 
             # reading the csv file
@@ -67,13 +49,6 @@ def uploadFile(request):
             if not df.columns.isin(['Reviews']).any():
                 context['error'] = True
                 context['errorMessage'] = 'Please make sure to have the Reviews column on your file, and to upload a correct CSV file'
-                return render(request, 'index.html', context=context)
-
-            # checking if file rows < 100 , if 0 token and < 100 --> error message
-            size = df.shape[0]
-            if userAI.coins - 0.5 < 0 and size > 100 and df.columns.isin(['Reviews']).any():
-                context['error'] = True
-                context['errorMessage'] = 'You cannot upload a file of more than 100 rows while you have no enough coins, please purchase more coins'
                 return render(request, 'index.html', context=context)
 
 
@@ -127,11 +102,7 @@ def uploadFile(request):
             context['keywords_counts'] = keywords_counts
 
             # delete file after finish
-            fs.delete(str(userAI.email) + '/data.csv')
-
-            # consuming 0.5 coins after making sure everything is good
-            if size > 100:
-                YourAIUser.objects.filter(id=userAI.id).update(coins=userAI.coins-0.5)
+            fs.delete('data.csv')
 
 
     except Exception as e:
@@ -149,7 +120,6 @@ def trialPage(request):
     })
 
 # api description page
-@login_required
 def apiPage(request):
     return render(request, 'apidescription.html')
 
@@ -161,41 +131,15 @@ def apisentiment(request):
         try:
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
-            # we check existence or email and password
-            if not body['email'] or not body['password'] or str(
-                    body['email']).strip() == '' or str(body['password']).strip() == '':
-                return HttpResponse(status="510",
-                                    content="Email or password not provided with body parameters")  # 510 : email or password not filled
-
-            elif not body['text'] or str(body['text']).strip() == '':
+            # we check existence or text
+            if not body['text'] or str(body['text']).strip() == '':
                 return HttpResponse(status="515",
                                     content="Review text not provided with body parameters")  # 515 : text not filled
 
             else:
-                email = body['email']
-                password = body['password']
                 text = body['text']
-                u = YourAIUser.objects.filter(email=email)
-
-                if not u.exists():
-                    return HttpResponse(status="250",
-                                        content="This user doesnt exist") # 250 user doesnt exist
-
-                # encrypt user password and compare it
-                user = YourAIUser.objects.get(email=email)
-                if str(triple_des('ABCDEFRTGHJSKLDS').encrypt(password, padmode=2)) != str(user.password) :
-                    return HttpResponse(status="255",
-                                        content="Incorrect user password")  # 255 incorrect password
-
-                # return error if no enough credits
-                if user.coins - 0.5 < 0:
-                    return HttpResponse(status="270",
-                                        content="Not enough credits for the request")  # 270 user doesnt exist
 
                 emotion = predictEmotion(text)
-
-                # consuming 0.5 coins after making sure everything is good
-                YourAIUser.objects.filter(id=user.id).update(coins=user.coins - 0.5)
 
                 return JsonResponse({
                     "sentiment":emotion[0],
@@ -204,7 +148,7 @@ def apisentiment(request):
 
         except Exception as e:
             print('Error : ',e)
-            return HttpResponse(status="500", content="Internal Error, please make sure to have correct review text and credentials") # 500 : internal error
+            return HttpResponse(status="500", content="Internal Error, please make sure to have correct review text") # 500 : internal error
 
     # else another method was user
     else :
@@ -219,46 +163,21 @@ def apisummary(request):
         try:
             body_unicode = request.body.decode('utf-8')
             body = json.loads(body_unicode)
-            # we check existence or email and password
-            if not body['email'] or not body['password'] or str(
-                    body['email']).strip() == '' or str(body['password']).strip() == '':
-                return HttpResponse(status="510",
-                                    content="Email or password not provided with body parameters")  # 510 : email or password not filled
 
-            elif not body['text'] or str(body['text']).strip() == '':
+            if not body['text'] or str(body['text']).strip() == '':
                 return HttpResponse(status="515",
                                     content="Review text not provided with body parameters")  # 515 : text not filled
 
             else:
-                email = body['email']
-                password = body['password']
                 text = body['text']
-                u = YourAIUser.objects.filter(email=email)
-
-                if not u.exists():
-                    return HttpResponse(status="250",
-                                        content="This user doesnt exist") # 250 user doesnt exist
-
-                # encrypt user password and compare it
-                user = YourAIUser.objects.get(email=email)
-                if str(triple_des('ABCDEFRTGHJSKLDS').encrypt(password, padmode=2)) != str(user.password) :
-                    return HttpResponse(status="255",
-                                        content="Incorrect user password")  # 255 incorrect password
-
-                # return error if no enough credits (price = 1 coin)
-                if user.coins - 1 < 0:
-                    return HttpResponse(status="270",
-                                        content="Not enough credits for the request")  # 270 user doesnt exist
 
                 summary = predictSummary(text)
 
                 # in case of error
                 if summary == '-1':
                     return HttpResponse(status="500",
-                                        content="Internal Error, please make sure to have correct review text and credentials")  # 500 : internal error
+                                        content="Internal Error, please make sure to have correct review text")  # 500 : internal error
 
-                # consuming 0.5 coins after making sure everything is good
-                YourAIUser.objects.filter(id=user.id).update(coins=user.coins - 1)
 
                 return JsonResponse({
                     "summary":summary
@@ -266,7 +185,7 @@ def apisummary(request):
 
         except Exception as e:
             print('Error : ',e)
-            return HttpResponse(status="500", content="Internal Error, please make sure to have correct review text and credentials") # 500 : internal error
+            return HttpResponse(status="500", content="Internal Error, please make sure to have correct review text") # 500 : internal error
 
     # else another method was user
     else :
@@ -434,7 +353,6 @@ def detectEmotionTrial(request):
 
 
 # http codes description
-@login_required
 def httpDescription(request):
     return render(request, 'httpDescription.html')
 
