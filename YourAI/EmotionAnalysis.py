@@ -7,7 +7,7 @@ import openai
 from nltk.corpus import stopwords
 
 nltk.download('stopwords')
-openai.api_key = "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"
+openai.api_key = ""
 sia = TextClassifier.load('en-sentiment')
 
 '''
